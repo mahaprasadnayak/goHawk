@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Go Application",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/main.go",
+            "args": ["--pattern", "email", "--file", "F:\\Golang\\goHawk\\imp", "-r"],
+            "cwd": "${workspaceFolder}"
+        }
+    ]
+}
