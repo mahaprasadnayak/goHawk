@@ -2,16 +2,19 @@ package search
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"io"
 	"os"
 	"regexp"
 )
 
 func SearchFile(filename, pattern string) error {
+	if len(pattern) > 0 && len(pattern) < 3 {
+		return errors.New("pattern must contain at least 3 characters")
+	}
 	file, err := os.Open(filename)
 	if err != nil {
-		return err
+		return errors.New("failed to open the file: " + filename)
 	}
 	defer file.Close()
 
@@ -20,27 +23,20 @@ func SearchFile(filename, pattern string) error {
 	if pattern == "" {
 		re = regexp.MustCompile(".*") // Matches any line.
 	} else {
-		re, err = regexp.Compile(pattern)
+		re, err = regexp.Compile("(?i).*" + regexp.QuoteMeta(pattern) + ".*")
 		if err != nil {
 			return err
 		}
 	}
-
-	reader := bufio.NewReader(file)
-	for {
-		line, err := reader.ReadString('\n') // Read line by line
-		if err != nil {
-			if err == io.EOF {
-				break
-			}
-			return err
-		}
-
-		// Trim the newline character and check if the line matches the pattern
-		line = line[:len(line)-1]
+	reader := bufio.NewScanner(file)
+	for reader.Scan() {
+		line := reader.Text()
 		if re.MatchString(line) {
 			fmt.Printf("%s: %s\n", filename, line)
 		}
+	}
+	if err := reader.Err(); err != nil {
+		return errors.New("failed to finish reading the file: " + filename)
 	}
 	return nil
 }
