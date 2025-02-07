@@ -7,18 +7,27 @@ import (
 	"regexp"
 )
 
-func SearchDirectory(directory, pattern string) error {
-	// Compile the regex
-	var re *regexp.Regexp
-	if pattern == "" {
-		re = regexp.MustCompile(".*") // Matches any line.
-	} else {
-		var err error
-		re, err = regexp.Compile(pattern)
-		if err != nil {
-			return err
-		}
+func SearchDirectory(directory, pattern string ,caseInsensitive bool) error {
+	
+	if caseInsensitive {
+		pattern = "(?i)" + pattern
 	}
+
+	re, compErr := regexp.Compile(pattern)
+	if compErr != nil {
+		return compErr
+	}
+	// Compile the regex
+	// var re *regexp.Regexp
+	// if pattern == "" {
+	// 	re = regexp.MustCompile(".*") // Matches any line.
+	// } else {
+	// 	var err error
+	// 	re, err = regexp.Compile(pattern)
+	// 	if err != nil {
+	// 		return err
+	// 	}
+	// }
 
 	// Walk the directory tree
 	err := filepath.WalkDir(directory, func(path string, d os.DirEntry, err error) error {
@@ -33,7 +42,7 @@ func SearchDirectory(directory, pattern string) error {
 		}
 
 		// Search the file
-		return SearchFile(path, re.String())
+		return SearchFile(path, re.String(),caseInsensitive)
 	})
 
 	return err

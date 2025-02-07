@@ -1,6 +1,15 @@
 # goHawk
 Search with precision, soar with speed
 
+## Features
+```sh
+  1. Basic Text Search
+  2. Recursive Search
+  3. Case-Insensitive Search
+  4. Display Line Numbers
+  5. Count Matches
+  6. Limit Output
+```2.201
 ## CMD
 - For recursive search:
   ```sh
