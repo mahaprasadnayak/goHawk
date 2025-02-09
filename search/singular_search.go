@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-func SearchFile(filename, pattern string,caseInsensitive bool) error {
+func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers bool) error {
 	if len(pattern) > 0 && len(pattern) < 3 {
 		return errors.New("pattern must contain at least 3 characters")
 	}
@@ -20,6 +20,8 @@ func SearchFile(filename, pattern string,caseInsensitive bool) error {
 	if caseInsensitive {
 		pattern = "(?i)" + pattern
 	}
+	/*
+	alt method to implement regex
 	// If the pattern is empty, match every line.
 	//var re *regexp.Regexp
 	// if pattern == "" {
@@ -30,15 +32,22 @@ func SearchFile(filename, pattern string,caseInsensitive bool) error {
 	// 		return err
 	// 	}
 	// }
+	*/
 	re, err := regexp.Compile(pattern)
 	if err != nil {
 		return err
 	}
 	reader := bufio.NewScanner(file)
+	lineNumber:=0
 	for reader.Scan() {
+		lineNumber++
 		line := reader.Text()
 		if re.MatchString(line) {
-			fmt.Printf("%s: %s\n", filename, line)
+			if showLineNumbers {
+				fmt.Printf("%s: line number :: %d: %s\n", filename, lineNumber, line)
+			}else{
+				fmt.Printf("%s: %s\n", filename, line)
+			}
 		}
 	}
 	if err := reader.Err(); err != nil {

@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-func SearchDirectory(directory, pattern string ,caseInsensitive bool) error {
+func SearchDirectory(directory, pattern string ,caseInsensitive,showLineNumbers bool) error {
 	
 	if caseInsensitive {
 		pattern = "(?i)" + pattern
@@ -17,7 +17,9 @@ func SearchDirectory(directory, pattern string ,caseInsensitive bool) error {
 	if compErr != nil {
 		return compErr
 	}
-	// Compile the regex
+	/*
+	alt method to implement regex
+	// Compile the regex 
 	// var re *regexp.Regexp
 	// if pattern == "" {
 	// 	re = regexp.MustCompile(".*") // Matches any line.
@@ -28,7 +30,7 @@ func SearchDirectory(directory, pattern string ,caseInsensitive bool) error {
 	// 		return err
 	// 	}
 	// }
-
+	*/
 	// Walk the directory tree
 	err := filepath.WalkDir(directory, func(path string, d os.DirEntry, err error) error {
 		if err != nil {
@@ -42,7 +44,7 @@ func SearchDirectory(directory, pattern string ,caseInsensitive bool) error {
 		}
 
 		// Search the file
-		return SearchFile(path, re.String(),caseInsensitive)
+		return SearchFile(path, re.String(),caseInsensitive ,showLineNumbers)
 	})
 
 	return err

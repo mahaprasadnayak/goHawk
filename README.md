@@ -9,16 +9,23 @@ Search with precision, soar with speed
   4. Display Line Numbers
   5. Count Matches
   6. Limit Output
-```2.201
+```
 ## CMD
 - For recursive search:
   ```sh
   goHawk.exe --pattern <text_to_search> --file <file_directory> -r
   ```
-- For Single File Search
+- For Single text Search
    ```sh
    goHawk.exe --pattern <text_to_search> --file <file_path>
    ```
+- For Case-Insenstive  Search
+  ```sh
+  goHawk --pattern <text_to_search> --file <file_directory> -r -i
+
+   goHawk --pattern <text_to_search> --file <file_directory> -r -i
+
+  ```
 ## Example-1
  ```sh
   goHawk.exe --pattern email --file ./imp -r
