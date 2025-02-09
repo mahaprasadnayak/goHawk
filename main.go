@@ -11,7 +11,7 @@ import (
 func main() {
 	var pattern string
 	var file string
-	var recursive, caseInsensitive,showLineNumbers  bool
+	var recursive, caseInsensitive,showLineNumbers,countMatches  bool
 
 	// Create the root command
 	var rootCmd = &cobra.Command{
@@ -24,7 +24,7 @@ func main() {
 					return
 				}
 				fmt.Printf("Searching recursively for pattern: '%s' in directory: '%s'\n", pattern, file)
-				searchErr := search.SearchDirectory(file, pattern,caseInsensitive,showLineNumbers)
+				searchErr := search.SearchDirectory(file, pattern,caseInsensitive,showLineNumbers,countMatches)
 				if searchErr != nil {
 					log.Println("Error in recursive search:", searchErr.Error())
 				}
@@ -34,7 +34,7 @@ func main() {
 					return
 				}
 				fmt.Printf("Searching for pattern: '%s' in file: '%s'\n", pattern, file)
-				searchErr := search.SearchFile(file, pattern,caseInsensitive,showLineNumbers)
+				searchErr := search.SearchFile(file, pattern,caseInsensitive,showLineNumbers,countMatches)
 				if searchErr != nil {
 					log.Println("Error in file search:", searchErr.Error())
 				}
@@ -48,6 +48,7 @@ func main() {
 	rootCmd.Flags().BoolVarP(&recursive, "recursive", "r", false, "Recursively search directories")
 	rootCmd.Flags().BoolVarP(&caseInsensitive, "ignore-case", "i", false, "Perform case-insensitive search")
 	rootCmd.Flags().BoolVarP(&showLineNumbers, "line-numbers", "n", false, "Show line numbers")
+	rootCmd.Flags().BoolVarP(&countMatches, "count", "c", false, "Show count of matches")
 
 
 	// Execute the command

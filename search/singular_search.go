@@ -8,7 +8,7 @@ import (
 	"regexp"
 )
 
-func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers bool) error {
+func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers,countMatches bool) error {
 	if len(pattern) > 0 && len(pattern) < 3 {
 		return errors.New("pattern must contain at least 3 characters")
 	}
@@ -38,17 +38,23 @@ func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers bool) e
 		return err
 	}
 	reader := bufio.NewScanner(file)
-	lineNumber:=0
+	lineNumber,matchCount:=0,0
 	for reader.Scan() {
 		lineNumber++
 		line := reader.Text()
 		if re.MatchString(line) {
-			if showLineNumbers {
-				fmt.Printf("%s: line number :: %d: %s\n", filename, lineNumber, line)
-			}else{
-				fmt.Printf("%s: %s\n", filename, line)
+			matchCount++
+			if !countMatches{
+				if showLineNumbers {
+					fmt.Printf("%s: line number :: %d: %s\n", filename, lineNumber, line)
+				}else{
+					fmt.Printf("%s: %s\n", filename, line)
+				}
 			}
 		}
+	}
+	if countMatches {
+		fmt.Printf("%s: %d matches\n", filename, matchCount)
 	}
 	if err := reader.Err(); err != nil {
 		return errors.New("failed to finish reading the file: " + filename)
