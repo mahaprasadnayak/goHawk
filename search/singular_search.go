@@ -8,7 +8,13 @@ import (
 	"regexp"
 )
 
-func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers,countMatches bool) error {
+// ANSI color codes
+const (
+	yellowStart = "\033[33m" // Yellow text
+	colorReset  = "\033[0m"  // Reset color
+)
+
+func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers,countMatches,highlightMatches  bool) error {
 	if len(pattern) > 0 && len(pattern) < 3 {
 		return errors.New("pattern must contain at least 3 characters")
 	}
@@ -44,6 +50,9 @@ func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers,countMa
 		line := reader.Text()
 		if re.MatchString(line) {
 			matchCount++
+			if highlightMatches {
+				line = highlightText(line, re)
+			}
 			if !countMatches{
 				if showLineNumbers {
 					fmt.Printf("%s: line number :: %d: %s\n", filename, lineNumber, line)
@@ -60,4 +69,12 @@ func SearchFile(filename, pattern string,caseInsensitive,showLineNumbers,countMa
 		return errors.New("failed to finish reading the file: " + filename)
 	}
 	return nil
+}
+
+
+// highlightText wraps matched text in ANSI yellow color codes
+func highlightText(line string, re *regexp.Regexp) string {
+	return re.ReplaceAllStringFunc(line, func(match string) string {
+		return yellowStart + match + colorReset
+	})
 }

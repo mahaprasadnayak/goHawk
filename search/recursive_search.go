@@ -7,7 +7,7 @@ import (
 	"regexp"
 )
 
-func SearchDirectory(directory, pattern string ,caseInsensitive,showLineNumbers,countMatches bool) error {
+func SearchDirectory(directory, pattern string ,caseInsensitive,showLineNumbers,countMatches,highlightMatches  bool) error {
 	
 	if caseInsensitive {
 		pattern = "(?i)" + pattern
@@ -44,7 +44,7 @@ func SearchDirectory(directory, pattern string ,caseInsensitive,showLineNumbers,
 		}
 
 		// Search the file
-		return SearchFile(path, re.String(),caseInsensitive ,showLineNumbers,countMatches)
+		return SearchFile(path, re.String(),caseInsensitive ,showLineNumbers,countMatches,highlightMatches )
 	})
 
 	return err

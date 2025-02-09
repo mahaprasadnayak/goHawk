@@ -11,9 +11,9 @@ import (
 func main() {
 	var pattern string
 	var file string
-	var recursive, caseInsensitive,showLineNumbers,countMatches  bool
+	var recursive, caseInsensitive,showLineNumbers,countMatches,highlightMatches   bool
 
-	// Create the root command
+	// Create the root command to initialize the goHawk
 	var rootCmd = &cobra.Command{
 		Use:   "goHawk",
 		Short: "goHawk - High-performance text search tool",
@@ -24,7 +24,7 @@ func main() {
 					return
 				}
 				fmt.Printf("Searching recursively for pattern: '%s' in directory: '%s'\n", pattern, file)
-				searchErr := search.SearchDirectory(file, pattern,caseInsensitive,showLineNumbers,countMatches)
+				searchErr := search.SearchDirectory(file, pattern,caseInsensitive,showLineNumbers,countMatches,highlightMatches )
 				if searchErr != nil {
 					log.Println("Error in recursive search:", searchErr.Error())
 				}
@@ -34,7 +34,7 @@ func main() {
 					return
 				}
 				fmt.Printf("Searching for pattern: '%s' in file: '%s'\n", pattern, file)
-				searchErr := search.SearchFile(file, pattern,caseInsensitive,showLineNumbers,countMatches)
+				searchErr := search.SearchFile(file, pattern,caseInsensitive,showLineNumbers,countMatches,highlightMatches )
 				if searchErr != nil {
 					log.Println("Error in file search:", searchErr.Error())
 				}
@@ -49,6 +49,7 @@ func main() {
 	rootCmd.Flags().BoolVarP(&caseInsensitive, "ignore-case", "i", false, "Perform case-insensitive search")
 	rootCmd.Flags().BoolVarP(&showLineNumbers, "line-numbers", "n", false, "Show line numbers")
 	rootCmd.Flags().BoolVarP(&countMatches, "count", "c", false, "Show count of matches")
+	rootCmd.Flags().BoolVarP(&highlightMatches, "highlight", "H", false, "Highlight the matches")
 
 
 	// Execute the command
